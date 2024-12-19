@@ -23,7 +23,6 @@
     </nav>
 
     <main class="container mx-auto p-4">
-        <!-- Timer Section -->
         <section id="timer" class="mb-6 bg-white p-6 rounded-xl shadow-md">
             <h2 class="text-2xl font-bold mb-4 text-gray-800">Pomodoro Timer</h2>
             <div id="timer-display" class="text-6xl font-mono text-center bg-gray-50 p-8 rounded-lg mb-4">25:00</div>
@@ -40,7 +39,6 @@
             </div>
         </section>
 
-        <!-- Task Section -->
         <section id="tasks" class="mb-6 bg-white p-6 rounded-xl shadow-md">
             <h2 class="text-2xl font-bold mb-4 text-gray-800">Tarefas</h2>
             <div id="task-input-section" class="flex mb-4">
@@ -61,7 +59,6 @@
             </div>
         </section>
 
-        <!-- Settings Section -->
         <section id="settings" class="mb-6 bg-white p-6 rounded-xl shadow-md">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold text-gray-800">Configurações</h2>
@@ -97,7 +94,7 @@
     </main>
 
     <script>
-        // Timer Logic
+        // Lógica do Timer
         let timerInterval;
         let isTimerRunning = false;
         let isPaused = false;
@@ -153,7 +150,7 @@
         }
 
         function playAlertSound() {
-            const audio = new Audio('data:audio/wav;base64,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');
+            const audio = new Audio('data:audio/wav;base64,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'); 
             audio.play();
         }
 
@@ -172,7 +169,7 @@
             }
         }
 
-        // Task Management
+        // Gerenciamento de Tarefas
         function createTaskElement(task) {
             const taskElement = document.createElement('div');
             taskElement.className = 'task-item flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200';
@@ -233,6 +230,29 @@
             }
         }
 
+        async function addTask(taskText) {
+            try {
+                const response = await fetch('/api/tasks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: taskText, completed: false })
+                });
+                if (response.ok) {
+                    const newTask = await response.json();
+                    document.getElementById('task-list').appendChild(createTaskElement(newTask));
+                    updateTaskCount(document.getElementById('task-list').children.length);
+                    document.getElementById('task-input').value = ''; // Clear input field
+                } else {
+                    showError('Erro ao adicionar tarefa');
+                }
+            } catch (error) {
+                console.error('Error adding task:', error);
+                showError('Erro ao adicionar tarefa');
+            }
+        }
+
         function updateTaskCount(count) {
             const taskCount = document.getElementById('task-count');
             taskCount.textContent = `${count} ${count === 1 ? 'tarefa' : 'tarefas'}`;
@@ -246,14 +266,11 @@
             setTimeout(() => errorDiv.remove(), 3000);
         }
 
-        // Settings Management
         document.addEventListener('DOMContentLoaded', () => {
-            // Request notification permission
             if (Notification.permission !== "granted" && Notification.permission !== "denied") {
                 Notification.requestPermission();
             }
 
-            // Initialize event listeners
             document.getElementById('start-timer').addEventListener('click', startTimer);
             document.getElementById('pause-timer').addEventListener('click', pauseTimer);
             document.getElementById('reset-timer').addEventListener('click', resetTimer);
@@ -271,7 +288,6 @@
                 }
             });
 
-            // Settings toggle
             document.getElementById('toggle-settings').addEventListener('click', () => {
                 const settingsContent = document.getElementById('settings-content');
                 settingsContent.classList.toggle('hidden');
@@ -280,12 +296,10 @@
 
             document.getElementById('save-settings').addEventListener('click', saveSettings);
 
-            // Load initial data
             loadTasks();
             loadSettings();
         });
 
-        // Authentication check
         function checkAuth() {
             fetch('/api/auth/check')
                 .then(response => response.json())
@@ -299,8 +313,7 @@
                 });
         }
 
-        // Check authentication status periodically
-        setInterval(checkAuth, 300000); // Check every 5 minutes
+        setInterval(checkAuth, 300000); // Verificar a cada 5 minutos
     </script>
 </body>
 </html>

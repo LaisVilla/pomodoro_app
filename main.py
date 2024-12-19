@@ -177,7 +177,7 @@ def register():
         
         return jsonify({'success': True})
     
-    return render_template('register.html')
+    return render_template('registro.html')
 
 @app.route('/logout')
 @login_required
