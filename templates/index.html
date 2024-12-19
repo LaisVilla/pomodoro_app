@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Task Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <nav class="bg-blue-600 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Pomodoro Task Manager</h1>
+            <div class="flex items-center space-x-4">
+                <a href="/login" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
+                <a href="/register" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-user-plus mr-2"></i>Registrar
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4">
+        <!-- Timer Section -->
+        <section id="timer" class="mb-6 bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Pomodoro Timer</h2>
+            <div id="timer-display" class="text-6xl font-mono text-center bg-gray-50 p-8 rounded-lg mb-4">25:00</div>
+            <div class="flex justify-center space-x-4">
+                <button id="start-timer" class="flex items-center bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-play mr-2"></i>Iniciar
+                </button>
+                <button id="pause-timer" class="flex items-center bg-yellow-500 hover:bg-yellow-400 text-white px-6 py-3 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-pause mr-2"></i>Pausar
+                </button>
+                <button id="reset-timer" class="flex items-center bg-red-500 hover:bg-red-400 text-white px-6 py-3 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-redo mr-2"></i>Reiniciar
+                </button>
+            </div>
+        </section>
+
+        <!-- Task Section -->
+        <section id="tasks" class="mb-6 bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Tarefas</h2>
+            <div id="task-input-section" class="flex mb-4">
+                <div class="relative flex-1">
+                    <input id="task-input" type="text" placeholder="Adicione uma nova tarefa" 
+                           class="w-full border-2 border-gray-300 p-3 rounded-lg focus:outline-none focus:border-blue-500 transition-colors duration-200">
+                    <span class="absolute right-3 top-3 text-gray-400">
+                        <i class="fas fa-tasks"></i>
+                    </span>
+                </div>
+                <button id="add-task" class="flex items-center bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg ml-4 transition-colors duration-200">
+                    <i class="fas fa-plus mr-2"></i>Adicionar
+                </button>
+            </div>
+            <div id="task-list" class="space-y-2"></div>
+            <div class="mt-4 text-gray-600">
+                <p id="task-count" class="text-sm">0 tarefas</p>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings" class="mb-6 bg-white p-6 rounded-xl shadow-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Configurações</h2>
+                <button id="toggle-settings" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-cog text-xl"></i>
+                </button>
+            </div>
+            <div id="settings-content" class="hidden space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="space-y-2">
+                        <label for="focus-time" class="block text-gray-700 font-medium">Tempo de foco (minutos)</label>
+                        <input id="focus-time" type="number" value="25" min="1" max="60"
+                               class="w-full border-2 border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="short-break" class="block text-gray-700 font-medium">Pausa curta (minutos)</label>
+                        <input id="short-break" type="number" value="5" min="1" max="30"
+                               class="w-full border-2 border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="long-break" class="block text-gray-700 font-medium">Pausa longa (minutos)</label>
+                        <input id="long-break" type="number" value="15" min="1" max="60"
+                               class="w-full border-2 border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-4 mt-4">
+                    <button id="save-settings" class="flex items-center bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-save mr-2"></i>Salvar
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Timer Logic
+        let timerInterval;
+        let isTimerRunning = false;
+        let isPaused = false;
+
+        function startTimer() {
+            if (isTimerRunning && !isPaused) return;
+            
+            if (isPaused) {
+                isPaused = false;
+            } else {
+                isTimerRunning = true;
+            }
+
+            const startButton = document.getElementById('start-timer');
+            startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Continuar';
+            
+            let timerDisplay = document.getElementById('timer-display');
+            let [minutes, seconds] = timerDisplay.textContent.split(':').map(Number);
+
+            timerInterval = setInterval(() => {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(timerInterval);
+                        playAlertSound();
+                        showNotification("Tempo finalizado!");
+                        isTimerRunning = false;
+                        startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Iniciar';
+                        return;
+                    }
+                    minutes--;
+                    seconds = 59;
+                } else {
+                    seconds--;
+                }
+                timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            if (!isTimerRunning) return;
+            clearInterval(timerInterval);
+            isPaused = true;
+            document.getElementById('start-timer').innerHTML = '<i class="fas fa-play mr-2"></i>Continuar';
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            const focusTime = document.getElementById('focus-time').value;
+            document.getElementById('timer-display').textContent = `${String(focusTime).padStart(2, '0')}:00`;
+            isTimerRunning = false;
+            isPaused = false;
+            document.getElementById('start-timer').innerHTML = '<i class="fas fa-play mr-2"></i>Iniciar';
+        }
+
+        function playAlertSound() {
+            const audio = new Audio('data:audio/wav;base64,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');
+            audio.play();
+        }
+
+        function showNotification(message) {
+            if (Notification.permission === "granted") {
+                new Notification("Pomodoro Timer", {
+                    body: message,
+                    icon: "/favicon.ico"
+                });
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        showNotification(message);
+                    }
+                });
+            }
+        }
+
+        // Task Management
+        function createTaskElement(task) {
+            const taskElement = document.createElement('div');
+            taskElement.className = 'task-item flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200';
+            
+            const leftSection = document.createElement('div');
+            leftSection.className = 'flex items-center flex-1';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = task.completed;
+            checkbox.className = 'form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500';
+            checkbox.onchange = () => toggleTaskCompletion(task.id, task.completed);
+            
+            const taskText = document.createElement('span');
+            taskText.className = `ml-3 ${task.completed ? 'line-through text-gray-400' : 'text-gray-700'}`;
+            taskText.textContent = task.text;
+            
+            leftSection.appendChild(checkbox);
+            leftSection.appendChild(taskText);
+            
+            const buttons = document.createElement('div');
+            buttons.className = 'flex space-x-2';
+            
+            const editButton = document.createElement('button');
+            editButton.className = 'text-yellow-600 hover:text-yellow-700 p-2 rounded-full hover:bg-yellow-100 transition-colors duration-200';
+            editButton.innerHTML = '<i class="fas fa-edit"></i>';
+            editButton.onclick = () => editTask(task.id, task.text);
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'text-red-600 hover:text-red-700 p-2 rounded-full hover:bg-red-100 transition-colors duration-200';
+            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+            deleteButton.onclick = () => deleteTask(task.id);
+            
+            buttons.appendChild(editButton);
+            buttons.appendChild(deleteButton);
+            
+            taskElement.appendChild(leftSection);
+            taskElement.appendChild(buttons);
+            
+            return taskElement;
+        }
+
+        async function loadTasks() {
+            try {
+                const response = await fetch('/api/tasks');
+                if (response.ok) {
+                    const tasks = await response.json();
+                    const taskList = document.getElementById('task-list');
+                    taskList.innerHTML = '';
+                    tasks.forEach(task => {
+                        taskList.appendChild(createTaskElement(task));
+                    });
+                    updateTaskCount(tasks.length);
+                }
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                showError('Erro ao carregar tarefas');
+            }
+        }
+
+        function updateTaskCount(count) {
+            const taskCount = document.getElementById('task-count');
+            taskCount.textContent = `${count} ${count === 1 ? 'tarefa' : 'tarefas'}`;
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg';
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 3000);
+        }
+
+        // Settings Management
+        document.addEventListener('DOMContentLoaded', () => {
+            // Request notification permission
+            if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+
+            // Initialize event listeners
+            document.getElementById('start-timer').addEventListener('click', startTimer);
+            document.getElementById('pause-timer').addEventListener('click', pauseTimer);
+            document.getElementById('reset-timer').addEventListener('click', resetTimer);
+
+            const taskInput = document.getElementById('task-input');
+            document.getElementById('add-task').addEventListener('click', () => {
+                if (taskInput.value.trim()) {
+                    addTask(taskInput.value.trim());
+                }
+            });
+
+            taskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && taskInput.value.trim()) {
+                    addTask(taskInput.value.trim());
+                }
+            });
+
+            // Settings toggle
+            document.getElementById('toggle-settings').addEventListener('click', () => {
+                const settingsContent = document.getElementById('settings-content');
+                settingsContent.classList.toggle('hidden');
+                document.getElementById('toggle-settings').classList.toggle('rotate-180');
+            });
+
+            document.getElementById('save-settings').addEventListener('click', saveSettings);
+
+            // Load initial data
+            loadTasks();
+            loadSettings();
+        });
+
+        // Authentication check
+        function checkAuth() {
+            fetch('/api/auth/check')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.authenticated) {
+                        window.location.href = '/login';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking authentication:', error);
+                });
+        }
+
+        // Check authentication status periodically
+        setInterval(checkAuth, 300000); // Check every 5 minutes
+    </script>
+</body>
+</html>
