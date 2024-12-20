@@ -8,15 +8,35 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 min-h-screen">
+    <!-- Componente Modal -->
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900" id="modal-title">Alerta</h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i> <!-- Botão de fechar o modal -->
+                </button>
+            </div>
+            <div class="mb-4">
+                <p id="modal-message" class="text-gray-600"></p> <!-- Mensagem exibida no modal -->
+            </div>
+            <div class="flex justify-end">
+                <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                    OK <!-- Botão para fechar o modal -->
+                </button>
+            </div>
+        </div>
+    </div>
+
     <nav class="bg-blue-600 text-white p-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">Pomodoro Task Manager</h1>
+            <h1 class="text-2xl font-bold">Pomodoro Task Manager</h1> <!-- Título principal da aplicação -->
             <div class="flex items-center space-x-4">
                 <a href="/login" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login <!-- Link para a página de login -->
                 </a>
                 <a href="/register" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-user-plus mr-2"></i>Registrar
+                    <i class="fas fa-user-plus mr-2"></i>Registrar <!-- Link para a página de registro -->
                 </a>
             </div>
         </div>
@@ -24,69 +44,69 @@
 
     <main class="container mx-auto p-4">
         <section id="timer" class="mb-6 bg-white p-6 rounded-xl shadow-md">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">Pomodoro Timer</h2>
-            <div id="timer-display" class="text-6xl font-mono text-center bg-gray-50 p-8 rounded-lg mb-4">25:00</div>
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Pomodoro Timer</h2> <!-- Título da seção do timer -->
+            <div id="timer-display" class="text-6xl font-mono text-center bg-gray-50 p-8 rounded-lg mb-4">25:00</div> <!-- Exibição do timer -->
             <div class="flex justify-center space-x-4">
                 <button id="start-timer" class="flex items-center bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-play mr-2"></i>Iniciar
+                    <i class="fas fa-play mr-2"></i>Iniciar <!-- Botão para iniciar o timer -->
                 </button>
                 <button id="pause-timer" class="flex items-center bg-yellow-500 hover:bg-yellow-400 text-white px-6 py-3 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-pause mr-2"></i>Pausar
+                    <i class="fas fa-pause mr-2"></i>Pausar <!-- Botão para pausar o timer -->
                 </button>
                 <button id="reset-timer" class="flex items-center bg-red-500 hover:bg-red-400 text-white px-6 py-3 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-redo mr-2"></i>Reiniciar
+                    <i class="fas fa-redo mr-2"></i>Reiniciar <!-- Botão para reiniciar o timer -->
                 </button>
             </div>
         </section>
 
         <section id="tasks" class="mb-6 bg-white p-6 rounded-xl shadow-md">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">Tarefas</h2>
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Tarefas</h2> <!-- Título da seção de tarefas -->
             <div id="task-input-section" class="flex mb-4">
                 <div class="relative flex-1">
                     <input id="task-input" type="text" placeholder="Adicione uma nova tarefa" 
-                           class="w-full border-2 border-gray-300 p-3 rounded-lg focus:outline-none focus:border-blue-500 transition-colors duration-200">
+                           class="w-full border-2 border-gray-300 p-3 rounded-lg focus:outline-none focus:border-blue-500"> <!-- Campo para nova tarefa -->
                     <span class="absolute right-3 top-3 text-gray-400">
-                        <i class="fas fa-tasks"></i>
+                        <i class="fas fa-tasks"></i> <!-- Ícone para o campo de tarefa -->
                     </span>
                 </div>
                 <button id="add-task" class="flex items-center bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg ml-4 transition-colors duration-200">
-                    <i class="fas fa-plus mr-2"></i>Adicionar
+                    <i class="fas fa-plus mr-2"></i>Adicionar <!-- Botão para adicionar uma nova tarefa -->
                 </button>
             </div>
-            <div id="task-list" class="space-y-2"></div>
+            <div id="task-list" class="space-y-2"></div> <!-- Container para a lista de tarefas -->
             <div class="mt-4 text-gray-600">
-                <p id="task-count" class="text-sm">0 tarefas</p>
+                <p id="task-count" class="text-sm">0 tarefas</p> <!-- Exibição do número de tarefas -->
             </div>
         </section>
 
         <section id="settings" class="mb-6 bg-white p-6 rounded-xl shadow-md">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-gray-800">Configurações</h2>
+                <h2 class="text-2xl font-bold text-gray-800">Configurações</h2> <!-- Título da seção de configurações -->
                 <button id="toggle-settings" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-cog text-xl"></i>
+                    <i class="fas fa-cog text-xl"></i> <!-- Botão para alternar a visibilidade das configurações -->
                 </button>
             </div>
-            <div id="settings-content" class="hidden space-y-4">
+            <div id="settings-content" class="hidden space-y-4"> <!-- Conteúdo das configurações oculto -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="space-y-2">
                         <label for="focus-time" class="block text-gray-700 font-medium">Tempo de foco (minutos)</label>
                         <input id="focus-time" type="number" value="25" min="1" max="60"
-                               class="w-full border-2 border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500">
+                               class="w-full border-2 border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500"> <!-- Campo para tempo de foco -->
                     </div>
                     <div class="space-y-2">
                         <label for="short-break" class="block text-gray-700 font-medium">Pausa curta (minutos)</label>
                         <input id="short-break" type="number" value="5" min="1" max="30"
-                               class="w-full border-2 border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500">
+                               class="w-full border-2 border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500"> <!-- Campo para pausa curta -->
                     </div>
                     <div class="space-y-2">
                         <label for="long-break" class="block text-gray-700 font-medium">Pausa longa (minutos)</label>
                         <input id="long-break" type="number" value="15" min="1" max="60"
-                               class="w-full border-2 border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500">
+                               class="w-full border-2 border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500"> <!-- Campo para pausa longa -->
                     </div>
                 </div>
                 <div class="flex justify-end space-x-4 mt-4">
                     <button id="save-settings" class="flex items-center bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-colors duration-200">
-                        <i class="fas fa-save mr-2"></i>Salvar
+                        <i class="fas fa-save mr-2"></i>Salvar <!-- Botão para salvar configurações -->
                     </button>
                 </div>
             </div>
@@ -94,139 +114,173 @@
     </main>
 
     <script>
+        // Funções do Modal
+        function showModal(title, message, customButtons = null) {
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const buttonsContainer = modal.querySelector('.flex.justify-end');
+            
+            modalTitle.textContent = title; // Define o título do modal
+            modalMessage.textContent = message; // Define a mensagem do modal
+            
+            if (customButtons) {
+                buttonsContainer.innerHTML = customButtons; // Usa botões personalizados se fornecidos
+            } else {
+                buttonsContainer.innerHTML = `
+                    <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                        OK <!-- Botão padrão OK -->
+                    </button>
+                `;
+            }
+            
+            modal.classList.remove('hidden'); // Mostra o modal
+            document.addEventListener('keydown', handleEscapeKey); // Adiciona listener para a tecla escape
+            modal.addEventListener('click', handleOutsideClick); // Adiciona listener para clique fora do modal
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.add('hidden'); // Esconde o modal
+            document.removeEventListener('keydown', handleEscapeKey); // Remove listener da tecla escape
+            modal.removeEventListener('click', handleOutsideClick); // Remove listener de clique fora do modal
+        }
+
+        function handleEscapeKey(e) {
+            if (e.key === 'Escape') {
+                closeModal(); // Fecha o modal ao pressionar a tecla escape
+            }
+        }
+
+        function handleOutsideClick(e) {
+            if (e.target === document.getElementById('modal')) {
+                closeModal(); // Fecha o modal se clicado fora
+            }
+        }
+
         // Lógica do Timer
-        let timerInterval;
-        let isTimerRunning = false;
-        let isPaused = false;
+        let timerInterval; // Variável para armazenar o intervalo do timer
+        let isTimerRunning = false; // Flag para verificar se o timer está rodando
+        let isPaused = false; // Flag para verificar se o timer está pausado
 
         function startTimer() {
-            if (isTimerRunning && !isPaused) return;
+            if (isTimerRunning && !isPaused) return; // Impede o início se já estiver rodando
             
             if (isPaused) {
-                isPaused = false;
+                isPaused = false; // Retoma o timer se estiver pausado
             } else {
-                isTimerRunning = true;
+                isTimerRunning = true; // Inicia o timer
             }
 
             const startButton = document.getElementById('start-timer');
-            startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Continuar';
+            startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Continuar'; // Altera o texto do botão para "Continuar"
             
             let timerDisplay = document.getElementById('timer-display');
-            let [minutes, seconds] = timerDisplay.textContent.split(':').map(Number);
+            let [minutes, seconds] = timerDisplay.textContent.split(':').map(Number); // Obtém os valores atuais do timer
 
             timerInterval = setInterval(() => {
                 if (seconds === 0) {
                     if (minutes === 0) {
-                        clearInterval(timerInterval);
-                        playAlertSound();
-                        showNotification("Tempo finalizado!");
-                        isTimerRunning = false;
-                        startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Iniciar';
+                        clearInterval(timerInterval); // Para o timer quando chega a zero
+                        playAlertSound(); // Toca o som de alerta
+                        showNotification("Tempo finalizado!"); // Mostra a notificação
+                        isTimerRunning = false; // Reseta a flag de timer rodando
+                        startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Iniciar'; // Reseta o texto do botão
                         return;
                     }
-                    minutes--;
-                    seconds = 59;
+                    minutes--; // Diminui um minuto
+                    seconds = 59; // Reseta os segundos para 59
                 } else {
-                    seconds--;
+                    seconds--; // Diminui os segundos
                 }
-                timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            }, 1000);
+                timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; // Atualiza a exibição do timer
+            }, 1000); // Atualiza a cada segundo
         }
 
         function pauseTimer() {
-            if (!isTimerRunning) return;
-            clearInterval(timerInterval);
-            isPaused = true;
-            document.getElementById('start-timer').innerHTML = '<i class="fas fa-play mr-2"></i>Continuar';
+            if (!isTimerRunning) return; // Impede a pausa se não estiver rodando
+            clearInterval(timerInterval); // Limpa o intervalo do timer
+            isPaused = true; // Define a flag de pausado
+            document.getElementById('start-timer').innerHTML = '<i class="fas fa-play mr-2"></i>Continuar'; // Altera o texto do botão para "Continuar"
         }
 
         function resetTimer() {
-            clearInterval(timerInterval);
-            const focusTime = document.getElementById('focus-time').value;
-            document.getElementById('timer-display').textContent = `${String(focusTime).padStart(2, '0')}:00`;
-            isTimerRunning = false;
-            isPaused = false;
-            document.getElementById('start-timer').innerHTML = '<i class="fas fa-play mr-2"></i>Iniciar';
+            clearInterval(timerInterval); // Limpa o intervalo do timer
+            const focusTime = document.getElementById('focus-time').value; // Obtém o tempo de foco das configurações
+            document.getElementById('timer-display').textContent = `${String(focusTime).padStart(2, '0')}:00`; // Reseta a exibição do timer
+            isTimerRunning = false; // Reseta a flag de rodando
+            isPaused = false; // Reseta a flag de pausado
+            document.getElementById('start-timer').innerHTML = '<i class="fas fa-play mr-2"></i>Iniciar'; // Reseta o texto do botão
         }
 
         function playAlertSound() {
             const audio = new Audio('data:audio/wav;base64,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'); 
-            audio.play();
+            audio.play(); // Toca o som de alerta
         }
 
         function showNotification(message) {
-            if (Notification.permission === "granted") {
-                new Notification("Pomodoro Timer", {
-                    body: message,
-                    icon: "/favicon.ico"
-                });
-            } else if (Notification.permission !== "denied") {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        showNotification(message);
-                    }
-                });
-            }
+            showModal('Pomodoro Timer', message); // Mostra o modal de notificação
+            playAlertSound(); // Toca o som de alerta
         }
 
-        // Gerenciamento de Tarefas
+        // Funções de Gerenciamento de Tarefas
         function createTaskElement(task) {
             const taskElement = document.createElement('div');
-            taskElement.className = 'task-item flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200';
+            taskElement.className = 'task-item flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200'; // Estilo do item da tarefa
             
             const leftSection = document.createElement('div');
-            leftSection.className = 'flex items-center flex-1';
+            leftSection.className = 'flex items-center flex-1'; // Seção esquerda para texto da tarefa e checkbox
             
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
-            checkbox.checked = task.completed;
+            checkbox.checked = task.completed; // Define o checkbox com base na conclusão da tarefa
             checkbox.className = 'form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500';
-            checkbox.onchange = () => toggleTaskCompletion(task.id, task.completed);
+            checkbox.onchange = () => toggleTaskCompletion(task.id, task.completed); // Alterna a conclusão da tarefa
             
             const taskText = document.createElement('span');
-            taskText.className = `ml-3 ${task.completed ? 'line-through text-gray-400' : 'text-gray-700'}`;
-            taskText.textContent = task.text;
+            taskText.className = `ml-3 ${task.completed ? 'line-through text-gray-400' : 'text-gray-700'}`; // Estilo do texto da tarefa com base na conclusão
+            taskText.textContent = task.text; // Define o texto da tarefa
             
-            leftSection.appendChild(checkbox);
-            leftSection.appendChild(taskText);
+            leftSection.appendChild(checkbox); // Adiciona o checkbox à seção esquerda
+            leftSection.appendChild(taskText); // Adiciona o texto da tarefa à seção esquerda
             
             const buttons = document.createElement('div');
-            buttons.className = 'flex space-x-2';
+            buttons.className = 'flex space-x-2'; // Container de botões
             
             const editButton = document.createElement('button');
             editButton.className = 'text-yellow-600 hover:text-yellow-700 p-2 rounded-full hover:bg-yellow-100 transition-colors duration-200';
-            editButton.innerHTML = '<i class="fas fa-edit"></i>';
-            editButton.onclick = () => editTask(task.id, task.text);
+            editButton.innerHTML = '<i class="fas fa-edit"></i>'; // Ícone do botão de editar
+            editButton.onclick = () => editTask(task.id, task.text); // Edita a tarefa ao clicar
             
             const deleteButton = document.createElement('button');
             deleteButton.className = 'text-red-600 hover:text-red-700 p-2 rounded-full hover:bg-red-100 transition-colors duration-200';
-            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-            deleteButton.onclick = () => deleteTask(task.id);
+            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>'; // Ícone do botão de deletar
+            deleteButton.onclick = () => deleteTask(task.id); // Deleta a tarefa ao clicar
             
-            buttons.appendChild(editButton);
-            buttons.appendChild(deleteButton);
+            buttons.appendChild(editButton); // Adiciona o botão de editar
+            buttons.appendChild(deleteButton); // Adiciona o botão de deletar
             
-            taskElement.appendChild(leftSection);
-            taskElement.appendChild(buttons);
+            taskElement.appendChild(leftSection); // Adiciona a seção esquerda ao elemento da tarefa
+            taskElement.appendChild(buttons); // Adiciona os botões ao elemento da tarefa
             
-            return taskElement;
+            return taskElement; // Retorna o elemento completo da tarefa
         }
 
         async function loadTasks() {
             try {
-                const response = await fetch('/api/tasks');
+                const response = await fetch('/api/tasks'); // Busca tarefas da API
                 if (response.ok) {
-                    const tasks = await response.json();
+                    const tasks = await response.json(); // Analisa a resposta JSON
                     const taskList = document.getElementById('task-list');
-                    taskList.innerHTML = '';
+                    taskList.innerHTML = ''; // Limpa as tarefas existentes
                     tasks.forEach(task => {
-                        taskList.appendChild(createTaskElement(task));
+                        taskList.appendChild(createTaskElement(task)); // Adiciona cada tarefa à lista
                     });
-                    updateTaskCount(tasks.length);
+                    updateTaskCount(tasks.length); // Atualiza a exibição da contagem de tarefas
                 }
             } catch (error) {
-                console.error('Error loading tasks:', error);
-                showError('Erro ao carregar tarefas');
+                console.error('Error loading tasks:', error); // Registra erro
+                showModal('Erro', 'Erro ao carregar tarefas'); // Mostra modal de erro
             }
         }
 
@@ -235,85 +289,186 @@
                 const response = await fetch('/api/tasks', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json' // Define o tipo de conteúdo como JSON
                     },
-                    body: JSON.stringify({ text: taskText, completed: false })
+                    body: JSON.stringify({ text: taskText, completed: false }) // Envia os dados da nova tarefa
                 });
                 if (response.ok) {
-                    const newTask = await response.json();
-                    document.getElementById('task-list').appendChild(createTaskElement(newTask));
-                    updateTaskCount(document.getElementById('task-list').children.length);
-                    document.getElementById('task-input').value = ''; // Clear input field
+                    const newTask = await response.json(); // Analisa a resposta da nova tarefa
+                    document.getElementById('task-list').appendChild(createTaskElement(newTask)); // Adiciona nova tarefa à lista
+                    updateTaskCount(document.getElementById('task-list').children.length); // Atualiza a contagem de tarefas
+                    document.getElementById('task-input').value = ''; // Limpa o campo de entrada
+                    showModal('Sucesso', 'Tarefa adicionada com sucesso!'); // Mostra modal de sucesso
                 } else {
-                    showError('Erro ao adicionar tarefa');
+                    showModal('Erro', 'Erro ao adicionar tarefa'); // Mostra modal de erro
                 }
             } catch (error) {
-                console.error('Error adding task:', error);
-                showError('Erro ao adicionar tarefa');
+                console.error('Error adding task:', error); // Registra erro
+                showModal('Erro', 'Erro ao adicionar tarefa'); // Mostra modal de erro
+            }
+        }
+
+        async function editTask(taskId, currentText) {
+            showModal('Editar Tarefa', '', `
+                <div class="mb-4 w-full">
+                    <input type="text" id="edit-task-input" 
+                           class="w-full border-2 border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500"
+                           value="${currentText}"> <!-- Campo para editar a tarefa -->
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button onclick="confirmEdit(${taskId})" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                        Salvar <!-- Botão para salvar a tarefa editada -->
+                    </button>
+                    <button onclick="closeModal()" class="bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                        Cancelar <!-- Botão para cancelar a edição da tarefa -->
+                    </button>
+                </div>
+            `);
+            
+            setTimeout(() => {
+                const input = document.getElementById('edit-task-input');
+                input.focus(); // Foca no campo de entrada
+                input.select(); // Seleciona o texto do campo de entrada
+            }, 100);
+        }
+
+        async function confirmEdit(taskId) {
+            const newText = document.getElementById('edit-task-input').value.trim(); // Obtém o novo texto da tarefa
+            if (newText !== "") {
+                try {
+                    const response = await fetch(`/api/tasks/${taskId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json' // Define o tipo de conteúdo como JSON
+                        },
+                        body: JSON.stringify({ text: newText }) // Envia os dados atualizados da tarefa
+                    });
+                    if (response.ok) {
+                        closeModal(); // Fecha o modal
+                        loadTasks(); // Recarrega as tarefas
+                        showModal('Sucesso', 'Tarefa atualizada com sucesso!'); // Mostra modal de sucesso
+                    } else {
+                        showModal('Erro', 'Erro ao editar tarefa'); // Mostra modal de erro
+                    }
+                } catch (error) {
+                    console.error('Error editing task:', error); // Registra erro
+                    showModal('Erro', 'Erro ao editar tarefa'); // Mostra modal de erro
+                }
+            }
+        }
+
+        async function deleteTask(taskId) {
+            showModal('Confirmar Exclusão', 'Tem certeza que deseja deletar esta tarefa?', `
+                <div class="flex justify-end space-x-2">
+                    <button onclick="confirmDelete(${taskId})" class="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                        Deletar <!-- Botão para confirmar a exclusão -->
+                    </button>
+                    <button onclick="closeModal()" class="bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                        Cancelar <!-- Botão para cancelar a exclusão -->
+                    </button>
+                </div>
+            `);
+        }
+
+        async function confirmDelete(taskId) {
+            try {
+                const response = await fetch(`/api/tasks/${taskId}`, {
+                    method: 'DELETE' // Envia a requisição de exclusão
+                });
+                if (response.ok) {
+                    closeModal(); // Fecha o modal
+                    loadTasks(); // Recarrega as tarefas
+                    showModal('Sucesso', 'Tarefa deletada com sucesso!'); // Mostra modal de sucesso
+                } else {
+                    showModal('Erro', 'Erro ao deletar tarefa'); // Mostra modal de erro
+                }
+            } catch (error) {
+                console.error('Error deleting task:', error); // Registra erro
+                showModal('Erro', 'Erro ao deletar tarefa'); // Mostra modal de erro
             }
         }
 
         function updateTaskCount(count) {
             const taskCount = document.getElementById('task-count');
-            taskCount.textContent = `${count} ${count === 1 ? 'tarefa' : 'tarefas'}`;
+            taskCount.textContent = `${count} ${count === 1 ? 'tarefa' : 'tarefas'}`; // Atualiza a exibição da contagem de tarefas
         }
 
-        function showError(message) {
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg';
-            errorDiv.textContent = message;
-            document.body.appendChild(errorDiv);
-            setTimeout(() => errorDiv.remove(), 3000);
+        // Funções de Configurações
+        function saveSettings() {
+            const focusTime = document.getElementById('focus-time').value; // Obtém o tempo de foco
+            const shortBreak = document.getElementById('short-break').value; // Obtém o tempo de pausa curta
+            const longBreak = document.getElementById('long-break').value; // Obtém o tempo de pausa longa
+            
+            localStorage.setItem('settings', JSON.stringify({
+                focusTime,
+                shortBreak,
+                longBreak // Salva as configurações no armazenamento local
+            }));
+            
+            resetTimer(); // Reseta o timer com as novas configurações
+            showModal('Sucesso', 'Configurações salvas com sucesso!'); // Mostra modal de sucesso
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (Notification.permission !== "granted" && Notification.permission !== "denied") {
-                Notification.requestPermission();
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('settings')); // Carrega as configurações do armazenamento local
+            if (settings) {
+                document.getElementById('focus-time').value = settings.focusTime; // Define o tempo de foco
+                document.getElementById('short-break').value = settings.shortBreak; // Define o tempo de pausa curta
+                document.getElementById('long-break').value = settings.longBreak; // Define o tempo de pausa longa
+                resetTimer(); // Reseta o timer com as configurações carregadas
             }
+        }
 
-            document.getElementById('start-timer').addEventListener('click', startTimer);
-            document.getElementById('pause-timer').addEventListener('click', pauseTimer);
-            document.getElementById('reset-timer').addEventListener('click', resetTimer);
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            // Botões do Timer
+            document.getElementById('start-timer').addEventListener('click', startTimer); // Evento do botão iniciar timer
+            document.getElementById('pause-timer').addEventListener('click', pauseTimer); // Evento do botão pausar timer
+            document.getElementById('reset-timer').addEventListener('click', resetTimer); // Evento do botão reiniciar timer
 
+            // Entrada de Tarefa
             const taskInput = document.getElementById('task-input');
             document.getElementById('add-task').addEventListener('click', () => {
                 if (taskInput.value.trim()) {
-                    addTask(taskInput.value.trim());
+                    addTask(taskInput.value.trim()); // Adiciona tarefa ao clicar no botão
                 }
             });
 
             taskInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && taskInput.value.trim()) {
-                    addTask(taskInput.value.trim());
+                    addTask(taskInput.value.trim()); // Adiciona tarefa ao pressionar a tecla enter
                 }
             });
 
+            // Configurações
             document.getElementById('toggle-settings').addEventListener('click', () => {
                 const settingsContent = document.getElementById('settings-content');
-                settingsContent.classList.toggle('hidden');
-                document.getElementById('toggle-settings').classList.toggle('rotate-180');
+                settingsContent.classList.toggle('hidden'); // Alterna a visibilidade das configurações
+                document.getElementById('toggle-settings').classList.toggle('rotate-180'); // Rotaciona o ícone de configurações
             });
 
-            document.getElementById('save-settings').addEventListener('click', saveSettings);
+            document.getElementById('save-settings').addEventListener('click', saveSettings); // Evento do botão salvar configurações
 
-            loadTasks();
-            loadSettings();
+            // Inicializa
+            loadTasks(); // Carrega as tarefas ao carregar a página
+            loadSettings(); // Carrega as configurações ao carregar a página
         });
 
+        // Verificação de autenticação
         function checkAuth() {
-            fetch('/api/auth/check')
+            fetch('/api/auth/check') // Verifica o status de autenticação
                 .then(response => response.json())
                 .then(data => {
                     if (!data.authenticated) {
-                        window.location.href = '/login';
+                        window.location.href = '/login'; // Redireciona para login se não autenticado
                     }
                 })
                 .catch(error => {
-                    console.error('Error checking authentication:', error);
+                    console.error('Error checking authentication:', error); // Registra erro
                 });
         }
 
-        setInterval(checkAuth, 300000); // Verificar a cada 5 minutos
+        setInterval(checkAuth, 300000); // Verifica autenticação a cada 5 minutos
     </script>
 </body>
 </html>

@@ -203,7 +203,6 @@ def get_tasks():
     } for task in tasks])
 
 # Outras rotas de API com login_required
-# (Adicione @login_required a todas as rotas de API)
 @app.route('/api/tasks', methods=['POST'])
 @login_required
 def add_task():
@@ -223,7 +222,32 @@ def add_task():
     except ValueError as e:
         abort(400, description=str(e))
 
-# Repita o padrão para outras rotas de API
+@app.route('/api/tasks/<int:task_id>', methods=['PUT'])
+@login_required
+def update_task_route(task_id):
+    data = request.get_json()
+    text = data.get('text')
+    completed = data.get('completed')
+
+    try:
+        task = task_manager.update_task(task_id, text, completed)
+        return jsonify({
+            'id': task.id,
+            'text': task.text,
+            'completed': task.completed,
+            'created_at': task.created_at.isoformat()
+        })
+    except ValueError as e:
+        abort(400, description=str(e))
+
+@app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
+@login_required
+def delete_task_route(task_id):
+    try:
+        task_manager.delete_task(task_id)
+        return jsonify({'success': True}), 204
+    except ValueError as e:
+        abort(400, description=str(e))
 
 if __name__ == '__main__':
     # Cria o banco de dados se não existir

@@ -5,49 +5,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Pomodoro App</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gradient-to-br from-red-50 to-orange-100 min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md">
-        <form id="register-form" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <h2 class="text-2xl text-center mb-6 font-bold text-gray-800">Criar Conta</h2>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-                    Usuário
-                </label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                       id="username" type="text" placeholder="Nome de usuário" required>
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Criar Conta</h2>
+                <p class="text-center text-gray-600 mb-8">Comece sua jornada de produtividade</p>
+                
+                <form id="register-form" class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="username">
+                            <i class="fas fa-user mr-2"></i>Usuário
+                        </label>
+                        <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
+                               id="username" type="text" required>
+                        <div class="hidden text-red-500 text-sm mt-1" id="username-error"></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="email">
+                            <i class="fas fa-envelope mr-2"></i>Email
+                        </label>
+                        <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
+                               id="email" type="email" required>
+                        <div class="hidden text-red-500 text-sm mt-1" id="email-error"></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="password">
+                            <i class="fas fa-lock mr-2"></i>Senha
+                        </label>
+                        <div class="relative">
+                            <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
+                                   id="password" type="password" required>
+                            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700" id="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">A senha deve ter pelo menos 8 caracteres</div>
+                        <div class="hidden text-red-500 text-sm mt-1" id="password-error"></div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-green-500 hover:bg-green-600 focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                        <span class="inline-flex items-center justify-center">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Criar Conta
+                        </span>
+                    </button>
+
+                    <div class="text-center text-sm">
+                        <span class="text-gray-600">Já tem uma conta?</span>
+                        <a href="/login" class="text-blue-500 hover:text-blue-700 font-medium ml-1">Faça login</a>
+                    </div>
+                </form>
             </div>
-            <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-                    Senha
-                </label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
-                       id="password" type="password" placeholder="******************" required>
-            </div>
-            <div class="flex items-center justify-between">
-                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                    Registrar
-                </button>
-                <a href="/login" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-                    Já tem uma conta?
-                </a>
-            </div>
-        </form>
+        </div>
+
+        <!-- Loading overlay -->
+        <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500"></div>
+        </div>
     </div>
 
     <script>
+        // Toggle password visibility
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+            const username = document.getElementById('username');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+
+            // Reset previous errors
+            document.querySelectorAll('.text-red-500').forEach(error => error.classList.add('hidden'));
+
+            // Username validation
+            if (username.value.length < 3) {
+                const error = document.getElementById('username-error');
+                error.textContent = 'O usuário deve ter pelo menos 3 caracteres';
+                error.classList.remove('hidden');
+                isValid = false;
+            }
+
+            // Email validation
+            if (!/\S+@\S+\.\S+/.test(email.value)) {
+                const error = document.getElementById('email-error');
+                error.textContent = 'Email inválido';
+                error.classList.remove('hidden');
+                isValid = false;
+            }
+
+            // Password validation
+            if (password.value.length < 8) {
+                const error = document.getElementById('password-error');
+                error.textContent = 'A senha deve ter pelo menos 8 caracteres';
+                error.classList.remove('hidden');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Form submission
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!validateForm()) return;
+
             const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+
+            document.getElementById('loading-overlay').classList.remove('hidden');
 
             try {
                 const response = await fetch('/register', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
                 });
 
                 const data = await response.json();
@@ -61,6 +152,8 @@
             } catch (error) {
                 console.error('Erro:', error);
                 alert('Erro ao registrar');
+            } finally {
+                document.getElementById('loading-overlay').classList.add('hidden');
             }
         });
     </script>
